@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-07-19 22:28:29
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-08-08 16:43:16
+ * @LastEditTime: 2025-10-21 16:31:17
  * @FilePath: \threejs-demo\pageList.js
  */
 const list = [
@@ -240,6 +240,10 @@ const list = [
       {
         path: '/shader/city.html',
         title: 'Smart City'
+      },
+      {
+        path: "/shader/rainEffect.html",
+        title: "Rain Effect",
       }
     ],
   },

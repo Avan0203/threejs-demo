@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-05-17 19:27:06
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2025-04-15 14:11:17
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2025-09-16 14:29:10
  * @FilePath: \threejs-demo\src\controls\useTrackballControls.js
  */
 import {
@@ -99,6 +99,7 @@ function init() {
     folderOptions.add(controls, 'zoomSpeed', 0, 50, 0.5).name('Zoom speed');
     folderOptions.add(controls, 'minZoom', 0, 50, 0.5).name('Min zoom');
     folderOptions.add(controls, 'maxZoom', 0, 50, 0.5).name('Max zoom');
-    folderOptions.add(controls, 'staticMoving').name('staticMoving 阻尼是否被禁用')
+    folderOptions.add(controls, 'staticMoving').name('staticMoving 阻尼是否被禁用');
+    folderOptions.add(controls, 'dynamicDampingFactor', 0, 1, 0.05).name('dynamicDampingFactor');
     folderOptions.add(controls, 'reset').name('Reset');
 }
