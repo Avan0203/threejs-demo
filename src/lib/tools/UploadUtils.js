@@ -3,7 +3,11 @@ class UploadUtils {
         return new Promise((resolve, reject) => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            fileInput.accept = `.${formate}`;
+            // 处理多个文件格式，每个格式前都要加 .
+            if (formate) {
+                const formats = formate.split(',').map(f => `.${f.trim()}`).join(',');
+                fileInput.accept = formats;
+            }
             fileInput.style.display = 'none';
             fileInput.multiple = mutiple;
             document.body.appendChild(fileInput);
@@ -21,6 +25,4 @@ class UploadUtils {
     }
 }
 
-export {
-    UploadUtils
-}
+export {UploadUtils}
