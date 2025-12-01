@@ -37,7 +37,7 @@ window.onload = () => {
     init();
 };
 
-function init() {
+async function init() {
     const renderer = initRenderer();
     const camera = initPerspectiveCamera(new Vector3(10, 5, 10));
 
@@ -54,7 +54,7 @@ function init() {
     const controls = initOrbitControls(camera, renderer.domElement);
 
     const loader = initLoader();
-    const alphaMap = loader.load(`../../${Image_Path}/door/grass1.webp`);
+    const alphaMap = await loader.load(`../../${Image_Path}/door/grass1.webp`);
 
     loader.load(`../../${Image_Path}/hdr/OutdoorField.hdr`, (texture) => {
         texture.mapping = EquirectangularReflectionMapping;

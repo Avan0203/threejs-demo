@@ -32,14 +32,30 @@ import {
     Audio_Path
 } from '../lib/tools/index.js';
 import { ConvexObjectBreaker } from 'three/examples/jsm/misc/ConvexObjectBreaker.js';
-import { World, Body, Box as BoxShape, Vec3, Sphere, Material, ContactMaterial } from '../lib/other/physijs/cannon-es.js';
+import {
+ World, Body, Box as BoxShape, Vec3, Sphere, Material, ContactMaterial 
+} from '../lib/other/physijs/cannon-es.js';
 
 import CannonDebugger from '../lib/other/physijs/cannon-es-debugger.js';
 import { CannonUtils } from '../lib/other/physijs/cannon-utils.js';
 
+const wallPhysicMaterial = new Material({
+    restitution: 0.5,
+    friction: 0.8
+})
+
+const sphereGeometry = new SphereGeometry(1, 64, 64);
+
+const ballPhysicMaterial = new Material({
+    restitution: 0.5,
+    friction: 0.8
+})
+
 window.onload = () => {
     init();
 };
+
+
 function init() {
     const renderer = initRenderer();
     renderer.setClearColor(new Color('#000000'));
@@ -139,6 +155,9 @@ function init() {
         })
     })
 
+    const fps = 1 / 60;
+    const clock = initClock();
+
     function updatePhysicsWorld() {
         world.step(fps, clock.getDelta());
 
@@ -167,8 +186,7 @@ function init() {
         cannonDebugger.visible && cannonDebugger.update();
     }
 
-    const fps = 1 / 60;
-    const clock = initClock();
+
     function render() {
         controls.update();
         updatePhysicsWorld();
@@ -223,10 +241,7 @@ const halfSize = size.clone().multiplyScalar(0.5);
 const wallGeometry = new BoxGeometry(size.x, size.y, size.z);
 
 const wallShape = new BoxShape(halfSize);
-const wallPhysicMaterial = new Material({
-    restitution: 0.5,
-    friction: 0.8
-})
+
 function createWall(scene, world) {
     const mesh = new Mesh(wallGeometry, glassMaterial);
     mesh.castShadow = true;
@@ -264,12 +279,7 @@ function createWall(scene, world) {
 }
 
 
-const sphereGeometry = new SphereGeometry(1, 64, 64);
 
-const ballPhysicMaterial = new Material({
-    restitution: 0.5,
-    friction: 0.8
-})
 function createBall(scene, world) {
     const mesh = new Mesh(sphereGeometry, glassMaterial);
     mesh.castShadow = true;

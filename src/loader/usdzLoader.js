@@ -1,12 +1,12 @@
 /*
  * @Author: wuyifan0203 1208097313@qq.com
  * @Date: 2024-09-23 16:10:38
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2025-03-06 17:08:20
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2025-12-01 17:19:20
  * @FilePath: \threejs-demo\src\loader\usdzLoader.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
-import { USDZLoader } from 'three/examples/jsm/loaders/USDZLoader.js';
+import { USDLoader } from 'three/examples/jsm/loaders/USDLoader.js';
 import {
     initRenderer,
     initPerspectiveCamera,
@@ -72,7 +72,7 @@ async function init() {
     controls.target.set(-0.7, 6, 9);
     resize(renderer, camera);
 
-    const loader = new USDZLoader();
+    const loader = new USDLoader();
     const object = await loader.loadAsync(`../../${Model_Path}/saeukkang.usdz`);
 
     object.traverse((child) => {
@@ -89,7 +89,7 @@ async function init() {
 
     const gui = initGUI();
 
-    const updateHelper = (e) => spotLightHelper.update();
+    const updateHelper = () => spotLightHelper.update();
 
     gui.add(light, 'decay', 0, 15.01);
     gui.add(light, 'angle', 0, Math.PI * 2).onChange(updateHelper);

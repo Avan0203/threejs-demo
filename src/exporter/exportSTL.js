@@ -29,7 +29,7 @@ window.onload = () => {
     init();
 };
 
-function init() {
+async function init() {
     const renderer = initRenderer();
     const camera = initOrthographicCamera();
     camera.up.set(0, 0, 1);
@@ -44,7 +44,7 @@ function init() {
 
     const loader = initLoader();
 
-    const uvTexture = loader.load(`../../${Image_Path}/others/uv_grid_opengl.jpg`)
+    const uvTexture = await loader.load(`../../${Image_Path}/others/uv_grid_opengl.jpg`)
 
     const material = new MeshBasicMaterial({ map: uvTexture, wireframe: true });
     const normalMaterial = new MeshNormalMaterial({ wireframe: true });

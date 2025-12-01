@@ -2,8 +2,8 @@
  * @Author: wuyifan 1208097313@qq.com
  * @Date: 2025-06-10 23:36:34
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-06-30 01:06:08
- * @FilePath: /threejs-demo/src/occt/importStep.js
+ * @LastEditTime: 2025-11-05 15:03:48
+ * @FilePath: \threejs-demo\src\occt\importStep.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
 import {
@@ -120,6 +120,33 @@ async function init() {
         }
     };
 
+
+    // 拖拽功能
+    const canvas = renderer.domElement;
+    canvas.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    canvas.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    canvas.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            const fileName = file.name.toLowerCase();
+            if (fileName.endsWith('.stp') || fileName.endsWith('.step')) {
+                params.clear();
+                params.loadFile(file);
+            }
+        }
+    });
 
     const gui = initGUI();
     gui.add(params, 'defaultImport');

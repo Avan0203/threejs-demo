@@ -1,8 +1,8 @@
 /*
  * @Author: wuyifan0203 1208097313@qq.com
  * @Date: 2024-11-15 10:25:55
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2024-12-03 15:44:10
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2025-12-01 17:44:08
  * @FilePath: \threejs-demo\src\cannon\maze3D.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
@@ -55,6 +55,8 @@ const layerMap = {
 };
 
 const loader = initLoader();
+const gui = initGUI();
+
 window.onload = () => {
     init();
 };
@@ -71,6 +73,7 @@ async function init() {
 
     const octree = new Octree();
 
+    // eslint-disable-next-line no-use-before-define
     const player = new Player(octree);
 
     const eyeHelper = new CameraHelper(player.eye);
@@ -135,11 +138,9 @@ async function init() {
     octreeHelper.visible = false;
     scene.add(octreeHelper);
 
-    const params = {
-        showSide: false
-    };
+    const params = {showSide: false};
 
-    const gui = initGUI();
+
     gui.hide();
     gui.add(octreeHelper, 'visible').name('Octree Helper');
     gui.add(params, 'showSide').name('show side').onChange((flag) => {
@@ -211,9 +212,7 @@ async function init() {
 
         const fullScreen = new FullScreenQuad(
             new ShaderMaterial({
-                uniforms: {
-                    tDiffuse: { value: new CanvasTexture(canvas) }
-                },
+                uniforms: {tDiffuse: { value: new CanvasTexture(canvas) }},
                 vertexShader:/*glsl*/`
                 varying vec2 vUv;
                     void main(){
@@ -414,9 +413,7 @@ async function createMaze() {
         }
     }
 
-    return {
-        mesh
-    }
+    return {mesh}
 }
 
 function addLight(scene) {
