@@ -2,8 +2,8 @@
  * @Author: wuyifan 1208097313@qq.com
  * @Date: 2025-06-23 16:13:21
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-12-01 17:27:54
- * @FilePath: \threejs-demo\src\lib\custom\OmnipotentLoader.js
+ * @LastEditTime: 2025-12-03 01:02:53
+ * @FilePath: /threejs-demo/src/lib/custom/OmnipotentLoader.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
 import {
@@ -16,11 +16,12 @@ const loaderImportMap = {
     gltf: () => import('three/examples/jsm/loaders/GLTFLoader.js').then(m => m.GLTFLoader),
     fbx: () => import('three/examples/jsm/loaders/FBXLoader.js').then(m => m.FBXLoader),
     obj: () => import('three/examples/jsm/loaders/OBJLoader.js').then(m => m.OBJLoader),
-    hdr: () => import('three/examples/jsm/loaders/RGBELoader.js').then(m => m.RGBELoader),
+    hdr: () => import('three/examples/jsm/loaders/HDRLoader.js').then(m => m.HDRLoader),
     drc: () => import('three/examples/jsm/loaders/DRACOLoader.js').then(m => m.DRACOLoader),
     image: () => import('three').then(m => m.TextureLoader),
     cube: () => import('three').then(m => m.CubeTextureLoader),
-    audio: () => import('three').then(m => m.AudioLoader)
+    audio: () => import('three').then(m => m.AudioLoader),
+    usdz: () => import('three/examples/jsm/loaders/USDLoader.js').then(m => m.USDLoader)
 }
 
 const defaultManager = new LoadingManager();
@@ -210,7 +211,8 @@ class OmnipotentLoader extends Loader {
             'mp3': 'audio',
             'wav': 'audio',
             'hdr': 'hdr',
-            'drc': 'drc'
+            'drc': 'drc',
+            'usdz': 'usdz'
         };
         return typeMap[ext] || 'unknown';
     }

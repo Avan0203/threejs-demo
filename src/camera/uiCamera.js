@@ -1,3 +1,11 @@
+/*
+ * @Author: wuyifan 1208097313@qq.com
+ * @Date: 2025-12-03 01:00:16
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2025-12-03 01:10:18
+ * @FilePath: /threejs-demo/src/camera/uiCamera.js
+ * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
+ */
 import {
     Mesh,
     BoxGeometry,
@@ -11,8 +19,12 @@ import {
     initAxesHelper,
     initOrbitControls,
     initScene,
-    resize
+    resize,
+    initLoader,
+    Model_Path
 } from '../lib/tools/index.js';
+
+const loader = initLoader();
 
 window.onload = () => {
     init();
@@ -40,10 +52,12 @@ function init() {
     const mesh = new Mesh(new BoxGeometry(3, 3, 3), new MeshNormalMaterial());
     scene.add(mesh);
 
-  
-
     const mesh2 = new Mesh(new BoxGeometry(100, 100, 1), new MeshNormalMaterial());
     uiScene.add(mesh2);
+
+    loader.load(`../../${Model_Path}/burnout_lake.usdz`, (model) => {
+        scene.add(model);
+    });
 
     function render() {
         renderer.clear();
