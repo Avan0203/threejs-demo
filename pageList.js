@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-07-19 22:28:29
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-10-21 16:31:17
+ * @LastEditTime: 2025-12-04 16:53:44
  * @FilePath: \threejs-demo\pageList.js
  */
 const list = [
@@ -125,6 +125,10 @@ const list = [
         path: "/camera/cubeCamera.html",
         title: "Cube Camera reflection",
       },
+      {
+        path: "/camera/uiCamera.html",
+        title: "UI Camera",
+      }
     ],
   },
   {
