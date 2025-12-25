@@ -97,7 +97,8 @@ class SDFTextMaterial extends ShaderMaterial {
             `,
             transparent: true,
             depthTest: true,
-            depthWrite: false
+            depthWrite: false,
+            side: params.side,
         });
     }
 }
@@ -109,7 +110,8 @@ const defaultOptions = {
     maxWidth: Infinity,
     threshold: 0.5,
     edge: 0.04,
-    billboard: false
+    billboard: false,
+    side: 0, // 0: front, 1: back, 2: double
 }
 
 class SDFTextFont {
@@ -175,7 +177,7 @@ class SDFTextFont {
             let charOffset = 0;
 
             contents.forEach(({ content, color: segmentColor }) => {
-                const segmentLength = content.length;
+                const segmentLength = content.replace(/\n/g, '').length;
                 colorSegments.push({
                     start: charOffset,
                     end: charOffset + segmentLength,
@@ -298,6 +300,7 @@ class SDFTextFont {
             threshold: opts.threshold,
             edge: opts.edge,
             billboard: opts.billboard,
+            side: opts.side,
             vertexColors: isContentArray
         }));
         return mesh;
