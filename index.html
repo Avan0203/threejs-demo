@@ -1,8 +1,8 @@
 <!--
  * @Author: wuyifan0203 1208097313@qq.com
  * @Date: 2024-07-19 10:12:45
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2024-09-28 14:17:12
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2026-02-08 16:38:26
  * @FilePath: \threejs-demo\index.html
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
 -->
@@ -303,7 +303,7 @@
             </ul>
             <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
             <a href="https://github.com/wuyifan0203" class="github-icon" target="_blank">
-                <img src="/threejs-demo/public/images/github.png" alt="GitHub">
+                <img class="github-icon-img" src="" alt="GitHub">
             </a>
         </nav>
     </header>
@@ -318,7 +318,7 @@
     <footer>
         <p>&copy; 2024 wuyifan0203. All rights reserved.</p>
         <a href="https://github.com/wuyifan0203" class="github-icon" target="_blank">
-            <img src="/threejs-demo/public/images/github.png" alt="GitHub">
+            <img class="github-icon-img" src="" alt="GitHub">
         </a>
     </footer>
 
@@ -326,10 +326,14 @@
     <script type="module">
         import { list } from './pageList.js';
 
-        console.log(list);
-
-        const basePath = '/threejs-demo/src';
-        const imagePath = '/threejs-demo/screenshots/';
+        // Vite dev: BASE_URL 为 '/'；GitHub 静态部署无 Vite，用 location 判断
+        const base = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) ||
+            (location.pathname.startsWith('/threejs-demo') ? '/threejs-demo/' : '/');
+        const basePath = base.replace(/\/?$/, '/') + 'src';
+        const imagePath = base.replace(/\/?$/, '/') + 'screenshots/';
+        document.querySelectorAll('img.github-icon-img').forEach(img => {
+            img.src = (base === '/' ? '/images/' : base.replace(/\/?$/, '/') + 'public/images/') + 'github.png';
+        });
 
         function createProjectBlock(projectBlock) {
             const projectBlockDOM = document.createElement('div');

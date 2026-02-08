@@ -61,10 +61,10 @@ let sceneGraph;
  * - Morph normals / blend shape normals
  *
  * FBX format references:
- * - [C++ SDK reference]{@link https://help.autodesk.com/view/FBX/2017/ENU/?guid=__cpp_ref_index_html}
+ * - [C++ SDK reference](https://help.autodesk.com/view/FBX/2017/ENU/?guid=__cpp_ref_index_html)
  *
  * Binary format specification:
- * - [FBX binary file format specification]{@link https://code.blender.org/2013/08/fbx-binary-file-format-specification/}
+ * - [FBX binary file format specification](https://code.blender.org/2013/08/fbx-binary-file-format-specification/)
  *
  * ```js
  * const loader = new FBXLoader();
@@ -1615,11 +1615,9 @@ class GeometryParser {
 
 			case 'Mesh':
 				return this.parseMeshGeometry( relationships, geoNode, deformers );
-				break;
 
 			case 'NurbsCurve':
 				return this.parseNurbsGeometry( geoNode );
-				break;
 
 		}
 

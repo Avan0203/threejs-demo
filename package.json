@@ -6,8 +6,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
     "screenshot": "node bin/screenshot.js",
     "prepare": "husky",
     "commit": "git cz"
@@ -22,7 +20,7 @@
   ],
   "author": "wuyifan",
   "dependencies": {
-    "three": "^0.179.0"
+    "three": "^0.182.0"
   },
   "license": "MIT",
   "devDependencies": {
