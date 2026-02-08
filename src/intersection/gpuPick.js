@@ -2,8 +2,8 @@
  * @Author: wuyifan 1208097313@qq.com
  * @Date: 2025-07-04 00:55:23
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-07-04 00:59:00
- * @FilePath: /threejs-demo/src/intersection/gpuPick.js
+ * @LastEditTime: 2026-01-30 16:29:38
+ * @FilePath: \threejs-demo\src\intersection\gpuPick.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
 import {
@@ -36,6 +36,8 @@ import { printRenderTarget } from '../lib/util/catch.js';
 window.onload = () => {
     init();
 };
+
+const highlightSet = new Set();
 
 function init() {
     const renderer = initRenderer();
@@ -142,7 +144,6 @@ function init() {
     const helper = new CameraHelper(tmpCamera);
     helper.visible = false;
     pickScene.add(helper);
-    console.log('pickScene: ', pickScene);
 
     function pickObject() {
         preparePick();
@@ -175,10 +176,8 @@ function init() {
             const index = i * 4;
             // r,g,b
             const id = color2id(pickContent[index], pickContent[index + 1], pickContent[index + 2]);
-            console.log('id: ', id);
             if (meshMap.has(id)) {
                 const res = meshMap.get(id);
-                console.log('res: ', res);
                 return res;
             }
         }
@@ -196,7 +195,7 @@ function init() {
 
     const highlightMaterial = new MeshNormalMaterial();
 
-    const highlightSet = new Set();
+
     renderer.domElement.addEventListener('click', ({ clientX, clientY }) => {
         if (!enablePick) {
             return;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-07-19 22:28:29
  * @LastEditors: wuyifan 1208097313@qq.com
- * @LastEditTime: 2025-12-04 16:53:44
+ * @LastEditTime: 2026-02-08 15:52:59
  * @FilePath: \threejs-demo\pageList.js
  */
 const list = [
@@ -99,6 +99,10 @@ const list = [
         path: "/controls/usePointerLockControls.html",
         title: "Use Pointer Lock Controls",
       },
+      {
+        path: "/controls/useBlenderControls.html",
+        title: "Use Blender Controls",
+      }
     ],
   },
   {
