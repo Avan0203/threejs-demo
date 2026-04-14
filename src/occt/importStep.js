@@ -22,7 +22,7 @@ import {
     initGUI,
     resize
 } from '../lib/tools/index.js';
-import { UploadUtils } from '../lib/tools/uploadUtils.js';
+import { UploadUtils } from '../lib/tools/UploadUtils.js';
 import { OpenCascadeBuilder } from '../lib/tools/OpenCascadeBuilder.js';
 
 window.onload = () => {
