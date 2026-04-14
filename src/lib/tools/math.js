@@ -1,13 +1,11 @@
 /*
  * @Date: 2023-12-05 14:31:55
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2024-07-25 11:30:19
- * @FilePath: /threejs-demo/src/lib/tools/math.js
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2026-02-26 11:14:49
+ * @FilePath: \threejs-demo\src\lib\tools\math.js
  */
 
-import {
-    Matrix4, Vector3, Plane
-} from "three";
+import { Matrix4, Plane } from "three";
 
 /**
  * @description: webgl -> canvas

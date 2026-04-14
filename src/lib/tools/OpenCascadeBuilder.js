@@ -1,20 +1,42 @@
-import { BufferGeometry, BufferAttribute, MeshMatcapMaterial, LineBasicMaterial, TextureLoader } from 'three';
-import { Image_Path } from './constant.js';
+import {
+    BufferGeometry,
+    BufferAttribute,
+    MeshMatcapMaterial,
+    LineBasicMaterial,
+    TextureLoader
+} from 'three';
+
+// 动态计算资源路径，兼容本地开发和 GitHub Pages 部署
+const getAssetPath = () => {
+    const path = window.location.pathname;
+    // 如果在 threejs-demo 子目录下（GitHub Pages）
+    if (path.includes('/threejs-demo/')) {
+        return '/threejs-demo/public/images/others/metal.png';
+    }
+    // 本地开发，根目录
+    return '/public/images/others/metal.png';
+};
 
 const loader = new TextureLoader();
-const texture = loader.load(`../../../${Image_Path}/others/metal.png`);
+const texture = loader.load(getAssetPath());
 
 class OpenCascadeBuilder {
     constructor() {
         this.material = {
             solid: new MeshMatcapMaterial({ matcap: texture }),
             edge: new LineBasicMaterial({ color: '#000000' })
-        }
+        };
     }
 
     buildSolid(faceList) {
         const geometry = new BufferGeometry();
-        const { position, normal, indices, uvs, colors } = this.#convertBufferAttribute(faceList);
+        const {
+            position,
+            normal,
+            indices,
+            uvs,
+            colors
+        } = this.#convertBufferAttribute(faceList);
         geometry.setAttribute('position', new BufferAttribute(new Float32Array(position), 3));
         geometry.setAttribute('normal', new BufferAttribute(new Float32Array(normal), 3));
         geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
@@ -24,7 +46,7 @@ class OpenCascadeBuilder {
         geometry.computeBoundingBox();
         geometry.computeBoundingSphere();
 
-        geometry.userData = { faceList }
+        geometry.userData = { faceList };
         return geometry;
     }
 
@@ -75,7 +97,7 @@ class OpenCascadeBuilder {
             normal,
             indices,
             colors,
-        }
+        };
     }
 
     #convertEdgeBufferAttribute(edgeList) {
@@ -84,7 +106,6 @@ class OpenCascadeBuilder {
         const indices = [];
 
         let currentIndex = 0;
-        let count = 0;
 
         edgeList.forEach((edge) => {
             const edgeData = {
@@ -104,7 +125,6 @@ class OpenCascadeBuilder {
                     edge.vertex[i + 5],
                 );
                 indices.push(currentIndex, currentIndex);
-                count++;
             }
             edgeData.end = indices.length - 1;
             globalEdgeData[currentIndex] = edgeData;
@@ -114,7 +134,7 @@ class OpenCascadeBuilder {
             position,
             indices,
             edgeData: globalEdgeData,
-        }
+        };
     }
 }
 

@@ -1,9 +1,9 @@
 /*
  * @Author: wuyifan0203 1208097313@qq.com
  * @Date: 2025-04-29 15:09:33
- * @LastEditors: wuyifan0203 1208097313@qq.com
- * @LastEditTime: 2025-05-26 09:56:24
- * @FilePath: \threejs-demo\src\occt\useWorker.js
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2026-04-14 10:06:37
+ * @FilePath: \threejs-demo\src\occt\baseShape.js
  * Copyright (c) 2024 by wuyifan email: 1208097313@qq.com, All Rights Reserved.
  */
 import {
@@ -23,7 +23,6 @@ import {
     resize,
     gridPositions,
     TWO_PI,
-    initLoader,
     initFog,
     initPerspectiveCamera
 } from "../lib/tools/index.js";
@@ -49,7 +48,6 @@ function init() {
     const controls = initOrbitControls(camera, renderer.domElement);
     controls.target.set(0.5, -2, -0.15);
 
-    const loader = initLoader();
 
     const list = {
         Box: {
@@ -57,9 +55,7 @@ function init() {
             ySpan: 2,
             zSpan: 2,
         },
-        Sphere: {
-            radius: 1,
-        },
+        Sphere: {radius: 1,},
         Cylinder: {
             radius: 1,
             height: 2,
@@ -162,7 +158,7 @@ function init() {
 
     Object.entries(list).forEach(([name, values]) => {
         const folder = gui.addFolder(name);
-        Object.entries(values).forEach(([key, value]) => {
+        Object.entries(values).forEach(([key]) => {
             const k = key.toLowerCase();
             let kf = null;
             if (k.includes("angle")) {
@@ -170,7 +166,7 @@ function init() {
             } else {
                 kf = folder.add(values, key, 0, 3, 0.01);
             }
-            kf.onFinishChange((v) => {
+            kf.onFinishChange(() => {
                 worker.postMessage({
                     type: "update",
                     payload: { type: name, parameter: values, deviation },

@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-12-05 13:43:51
- * @LastEditors: Yifan Wu 1208097313@qq.com
- * @LastEditTime: 2024-07-22 13:27:20
- * @FilePath: /threejs-demo/src/camera/focusObject.js
+ * @LastEditors: wuyifan 1208097313@qq.com
+ * @LastEditTime: 2026-02-26 11:11:21
+ * @FilePath: \threejs-demo\src\camera\focusObject.js
  */
 
 import {
@@ -27,7 +27,9 @@ import {
     initGUI
 } from '../lib/tools/index.js';
 import { createNDCMatrix } from '../lib/tools/math.js';
-import { Tween, Easing, update } from '../lib/other/tween.esm.js'
+import {
+ Tween, Easing, update 
+} from '../lib/other/tween.esm.js'
 
 window.onload = () => {
     init();
@@ -195,53 +197,73 @@ function init() {
         const [targetWidth, targetHeight] = [
             width * 0.8,
             height * 0.8
-        ]
+        ];
 
-        const zoom = Math.min(
-            (targetWidth * tempZoom) / boxWidth,
-            (targetHeight * tempZoom) / boxHeight,
-        );
-
+        const isOrthographic = camera.isOrthographicCamera;
         const radius = camera.position.distanceTo(orbitControls.target);
-
         const direction = new Vector3().subVectors(camera.position, orbitControls.target).normalize();
 
-        const position = direction.multiplyScalar(radius).add(center);
+        let position;
+        let zoom;
 
-        // tween.
+        if (isOrthographic) {
+            zoom = Math.min(
+                (targetWidth * tempZoom) / Math.max(boxWidth, 1e-6),
+                (targetHeight * tempZoom) / Math.max(boxHeight, 1e-6),
+            );
+            position = direction.multiplyScalar(radius).add(center);
+        } else {
+            const scale = Math.min(
+                targetWidth / Math.max(boxWidth, 1e-6),
+                targetHeight / Math.max(boxHeight, 1e-6),
+            );
+            const newRadius = radius / scale;
+            position = direction.multiplyScalar(newRadius).add(center);
+        }
+
         if (o.useTween) {
-            tween = new Tween({
+            const from = {
                 px: camera.position.x,
                 py: camera.position.y,
                 pz: camera.position.z,
                 cx: orbitControls.target.x,
                 cy: orbitControls.target.y,
                 cz: orbitControls.target.z,
-                zoom: camera.zoom
-            })
-
-            tween.to({
+            };
+            const to = {
                 px: position.x,
                 py: position.y,
                 pz: position.z,
                 cx: center.x,
                 cy: center.y,
                 cz: center.z,
-                zoom: zoom,
-            }, 1000).easing(Easing.Quartic.Out);
+            };
+
+            if (isOrthographic) {
+                from.zoom = camera.zoom;
+                to.zoom = zoom;
+            }
+
+            tween = new Tween(from);
+
+            tween.to(to, 1000).easing(Easing.Quartic.Out);
 
             tween.onUpdate((e) => {
                 orbitControls.object.position.set(e.px, e.py, e.pz);
                 orbitControls.target.set(e.cx, e.cy, e.cz);
-                orbitControls.object.zoom = e.zoom;
+                if (isOrthographic) {
+                    orbitControls.object.zoom = e.zoom;
+                }
                 orbitControls.update();
-            })
+            });
 
             tween.start();
         } else {
             orbitControls.object.position.copy(position);
-            orbitControls.object.zoom = zoom;
             orbitControls.target.copy(center);
+            if (isOrthographic) {
+                orbitControls.object.zoom = zoom;
+            }
             orbitControls.update();
             camera.updateProjectionMatrix();
         }
