@@ -55,11 +55,13 @@ async function init() {
     const background = initScene();
     background.background = createBackgroundTexture('#1d8dd3', '#ffffff');
 
-    const helperScene = initScene();
+    const gridScene = initScene();
     const grid = new GridHelper(50,100);
     grid.rotateX(Math.PI/2);
-    helperScene.add(grid);
-    helperScene.add(initCoordinates(5));
+    gridScene.add(grid);
+
+    const coordinateScene = initScene();
+    coordinateScene.add(initCoordinates(5));
 
     const scene = initScene();
 
@@ -102,13 +104,19 @@ async function init() {
     const texture1 = await loader.loadAsync('../../public/images/render/sprite.png');
 
     const planeGeometry = new PlaneGeometry(3, 3);
+    const spriteMaterial = new MeshStandardMaterial({
+        side: 2,
+        map: texture1,
+        transparent: true,
+        alphaTest: 0.001
+    });
 
-    const planeMesh1 = new Mesh(planeGeometry, new MeshStandardMaterial({ side: 2, map: texture1 }));
+    const planeMesh1 = new Mesh(planeGeometry, spriteMaterial);
     planeMesh1.rotateX(Math.PI / 2);
     planeMesh1.position.set(-1.6, 0, 1.5);
     scene.add(planeMesh1);
 
-    const planeMesh2 = new Mesh(planeGeometry, new MeshStandardMaterial({ side: 2, map: texture1, transparent: true }));
+    const planeMesh2 = new Mesh(planeGeometry, spriteMaterial);
     planeMesh2.rotation.x = Math.PI / 2;
     planeMesh2.rotation.y = Math.PI * -0.2;
     planeMesh2.position.set(-1.2, 0, -1.5);
@@ -117,10 +125,13 @@ async function init() {
     // left normal render
 
     const bgPass = new RenderPass(background, camera);
-    bgPass.clear = false;
+    bgPass.clear = true;
 
-    const helperPass = new RenderPass(helperScene, camera);
-    helperPass.clear = false;
+    const gridPass = new RenderPass(gridScene, camera);
+    gridPass.clear = false;
+
+    const coordinatePass = new RenderPass(coordinateScene, camera);
+    coordinatePass.clear = false;
 
     const effectCopy = new ShaderPass(GammaCorrectionShader);
     effectCopy.renderToScreen = true;
@@ -132,7 +143,8 @@ async function init() {
     const leftComposer = new EffectComposer(renderer);
     leftComposer.addPass(bgPass);
     leftComposer.addPass(scenePass);
-    leftComposer.addPass(helperPass);
+    leftComposer.addPass(gridPass);
+    leftComposer.addPass(coordinatePass);
     leftComposer.addPass(effectCopy);
 
     // right OIT Render 
@@ -140,12 +152,13 @@ async function init() {
     const oitRenderPass = new OITRenderPass(scene.clone(true), camera);
     oitRenderPass.setLayerNumber(4);
     oitRenderPass.clear = false;
-    oitRenderPass.clearDepth = true;
+    oitRenderPass.clearDepth = false;
 
     const rightComposer = new EffectComposer(renderer);
     rightComposer.addPass(bgPass);
+    rightComposer.addPass(gridPass);
     rightComposer.addPass(oitRenderPass);
-    rightComposer.addPass(helperPass);
+    rightComposer.addPass(coordinatePass);
     rightComposer.addPass(effectCopy);
 
 

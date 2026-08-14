@@ -14,13 +14,18 @@ import {
     NoBlending,
     ShaderMaterial
 } from 'three';
-import { catchRenderTarget, catchTexture, printfImage } from '../lib/util/catch.js'
+import {
+    catchRenderTarget,
+    catchTexture,
+    printfImage
+} from '../lib/util/catch.js'
 
 
 
 const renderMaterial = new ShaderMaterial({
     uniforms: {
         tDiffuse: { value: null },
+        tDepth: { value: null },
         opacity: { value: 1.0 },
     },
     vertexShader: /*glsl*/ `
@@ -32,10 +37,15 @@ const renderMaterial = new ShaderMaterial({
     fragmentShader: /*glsl*/ `
         uniform float opacity;
         uniform sampler2D tDiffuse;
+        uniform sampler2D tDepth;
         varying vec2 vUv;
         void main() {
             gl_FragColor = texture2D( tDiffuse, vUv );
             gl_FragColor.a *= opacity;
+            if (gl_FragColor.a <= 0.0) {
+                discard;
+            }
+            gl_FragDepth = texture2D( tDepth, vUv ).x;
         }`,
     transparent: true,
     depthTest: true,
@@ -139,6 +149,7 @@ class OITRenderPass extends Pass {
 
         this.layers.forEach((layer) => {
             this.quad.material.uniforms.tDiffuse.value = layer.texture;
+            this.quad.material.uniforms.tDepth.value = layer.depthTexture;
 
             this.quad.material.needsUpdate = true;
             this.quad.render(renderer);
@@ -216,15 +227,18 @@ class OITRenderPass extends Pass {
     }
 }
 
-const replaceShader = /*glsl*/ `
+const depthPeelingShader = /*glsl*/ `
+        if (gl_FragColor.a <= 0.0) {
+            discard;
+        }
         vec2 screenPos = gl_FragCoord.xy * uReciprocalScreenSize;
         float prevDepth = texture2D(uPrevDepthTexture, screenPos).x;
         if (prevDepth >= gl_FragCoord.z){
             discard;
         }
-    }`;
+    `;
 
-function onBeforeCompile(shader, renderer) {
+function onBeforeCompile(shader) {
     shader.uniforms.uReciprocalScreenSize = this.uniforms.uReciprocalScreenSize;
     shader.uniforms.uPrevDepthTexture = this.uniforms.uPrevDepthTexture;
 
@@ -233,7 +247,10 @@ function onBeforeCompile(shader, renderer) {
     uniform sampler2D uPrevDepthTexture;
     ${shader.fragmentShader}`;
 
-    shader.fragmentShader = shader.fragmentShader.replace(/}$/gm, replaceShader);
+    shader.fragmentShader = shader.fragmentShader.replace(
+        /}\s*$/,
+        `${depthPeelingShader}\n}`
+    );
 }
 
 export { OITRenderPass };
