@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Splat PLY Loader</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #webgl-output {
+        width: 100%;
+        height: 100%;
+      }
+
+      #loader-status {
+        position: fixed;
+        z-index: 1;
+        top: 12px;
+        left: 12px;
+        max-width: calc(100vw - 24px);
+        padding: 8px 12px;
+        border-radius: 4px;
+        background: rgb(0 0 0 / 65%);
+        color: white;
+        font: 13px/1.4 sans-serif;
+        pointer-events: none;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../lib/three/build/three.module.js",
+          "three/examples/jsm/": "../lib/three/examples/jsm/",
+          "three/addons/": "../lib/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="webgl-output"></div>
+    <div id="loader-status" role="status">Loading final.ply…</div>
+    <script src="./plyLoader.js" type="module"></script>
+  </body>
+</html>

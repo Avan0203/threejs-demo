@@ -18,6 +18,7 @@ export default defineConfig({
     resolve: {
         alias: [
             { find: 'three/examples/jsm', replacement: path.resolve(__dirname, 'src/lib/three/examples/jsm') },
+            { find: 'three/addons', replacement: path.resolve(__dirname, 'src/lib/three/examples/jsm') },
             { find: 'three', replacement: path.resolve(__dirname, 'src/lib/three/build/three.module.js') },
         ],
     },

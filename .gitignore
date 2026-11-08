@@ -1,5 +1,5 @@
 node_modules
 *.code-workspace
-dist
+/dist
 .Ds_Store
 .idea

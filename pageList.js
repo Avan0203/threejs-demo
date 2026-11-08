@@ -410,6 +410,10 @@ const list = [
         title: "GLTF Loader",
       },
       {
+        path: "/loader/plyLoader.html",
+        title: "Gaussian Splat PLY Loader",
+      },
+      {
         path: "/loader/cubeTextureLoader.html",
         title: "Cube Texture Loader",
       },

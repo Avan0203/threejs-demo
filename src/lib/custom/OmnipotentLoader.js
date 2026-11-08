@@ -21,7 +21,8 @@ const loaderImportMap = {
     image: () => import('three').then(m => m.TextureLoader),
     cube: () => import('three').then(m => m.CubeTextureLoader),
     audio: () => import('three').then(m => m.AudioLoader),
-    usdz: () => import('three/examples/jsm/loaders/USDLoader.js').then(m => m.USDLoader)
+    usdz: () => import('three/examples/jsm/loaders/USDLoader.js').then(m => m.USDLoader),
+    ply: () => import('./GaussianSplatLoader.js').then(m => m.GaussianSplatLoader)
 }
 
 const defaultManager = new LoadingManager();
@@ -181,6 +182,28 @@ class OmnipotentLoader extends Loader {
         }
     }
 
+    async loadFile(file, onProgress) {
+        if (!file || typeof file.name !== 'string' || typeof file.arrayBuffer !== 'function') {
+            throw new TypeError('loadFile expects a browser File object');
+        }
+
+        const fileType = this.#getFileType(file.name);
+        if (fileType === 'unknown') {
+            throw new Error('Unknown file type: ' + file.name);
+        }
+
+        try {
+            const loader = await this.getLoaderInstance(fileType);
+            if (typeof loader.loadFile !== 'function') {
+                throw new Error(`Local file loading is not supported for: ${file.name}`);
+            }
+            return await loader.loadFile(file, onProgress);
+        } catch (error) {
+            console.error('Failed to load local file:', error);
+            throw error;
+        }
+    }
+
     parse(/*any*/) {
         console.warn('OmnipotentLoader can`t parse');
         return this;
@@ -212,6 +235,7 @@ class OmnipotentLoader extends Loader {
             'wav': 'audio',
             'hdr': 'hdr',
             'drc': 'drc',
+            'ply': 'ply',
             'usdz': 'usdz'
         };
         return typeMap[ext] || 'unknown';
