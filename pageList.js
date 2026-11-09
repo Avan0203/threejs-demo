@@ -73,6 +73,10 @@ const list = [
         path: "/composer/unRealBloom.html",
         title: "unRealBloom Pass",
       },
+      {
+        path: "/composer/facingSilhouette.html",
+        title: "Facing Silhouette",
+      },
     ],
   },
   {
