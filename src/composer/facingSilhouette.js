@@ -342,41 +342,74 @@ function init() {
             void main() {
                 bool frontHere = covered(tFrontDepth, vUv);
                 bool backHere = covered(tBackDepth, vUv);
+                  // 正反面都在远平面，则discard
                 if (!frontHere && !backHere) discard;
 
+                // 计算正反面 facing 的绝对值
                 float frontAbs = facingAt(tFront, vUv);
                 float backAbs = facingAt(tBack, vUv);
                 bool edge = false;
                 vec2 texel = 1.0 / resolution;
                 vec2 axes[4];
+                // 初始化4个方向
                 axes[0] = vec2(1.0, 0.0);
                 axes[1] = vec2(0.0, 1.0);
                 axes[2] = vec2(1.0, 1.0);
                 axes[3] = vec2(1.0, -1.0);
 
+                //  对应方位轴向 & 索引
+                //     (0,1)[1] - (1,1)[2]
+                //      |       |
+                //    (0,0) - (1,0)[0]
+                //     |       |
+                //         - (1,-1)[3]
+
+
+                //  结合for 生成9宫格方向判断
+                //    (1,-1) * suv - vuv 【左上】   (0,1) * suv + vuv 【上】   (1,1) * suv + vuv 【右上】
+                //    (1,0) * suv  - vuv【左】        vuv（当前中心）        (1,0) * suv + vuv 【右】
+                //    (1,1) * suv - vuv 【左下】  (0,1) * suv - vuv 【下】   (1,-1) * suv + vuv 【右下】
+
                 for (int i = 0; i < 4; i++) {
+                     // 获取当前uv的
                     vec2 stepUv = axes[i] * texel;
+                    // front的正方向邻轴是否不为远平面
                     bool frontPos = covered(tFrontDepth, vUv + stepUv);
+                    // front的负方向邻轴是否不为远平面
                     bool frontNeg = covered(tFrontDepth, vUv - stepUv);
+                    // back的正方向邻轴是否不为远平面
                     bool backPos = covered(tBackDepth, vUv + stepUv);
+                    // back的负方向邻轴是否不为远平面
                     bool backNeg = covered(tBackDepth, vUv - stepUv);
+                    // 获取正面 + 方向 facing 的绝对值
                     float frontPosAbs = facingAt(tFront, vUv + stepUv);
+                    // 获取正面 - 方向 facing 的绝对值
                     float frontNegAbs = facingAt(tFront, vUv - stepUv);
+                    // 获取背面 + 方向 facing 的绝对值
                     float backPosAbs = facingAt(tBack, vUv + stepUv);
+                    // 获取背面 - 方向 facing 的绝对值
                     float backNegAbs = facingAt(tBack, vUv - stepUv);
 
                     if (enableValley) {
+                         // 正面两边高，中间低，则认为是边缘
                         if (frontHere && frontPos && frontNeg && valley(tFront, vUv, stepUv, frontAbs)) edge = true;
+                        // 反面两边高，中间低，则认为是边缘 (圆柱内径)
                         if (backHere && backPos && backNeg && valley(tBack, vUv, stepUv, backAbs)) edge = true;
                     }
 
                     if (enableBoundary) {
+                         // 正面：当前位置有，对位领轴一个有一个没有
                         if (frontHere && frontPos != frontNeg) {
+                            // 取有值的
                             float neighborAbs = frontPos ? frontPosAbs : frontNegAbs;
+                            // 有值比当前大，则认为是边缘
                             if (neighborAbs > frontAbs + valleyAbsEps) edge = true;
                         }
+                        // 背面：当前位置有，对位领轴一个有一个没有
                         if (backHere && backPos != backNeg) {
+                            // 取有值的
                             float neighborAbs = backPos ? backPosAbs : backNegAbs;
+                            // 有值比当前大，则认为是边缘
                             if (neighborAbs > backAbs + valleyAbsEps) edge = true;
                         }
                     }
